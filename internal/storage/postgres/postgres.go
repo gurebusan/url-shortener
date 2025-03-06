@@ -112,19 +112,3 @@ func (s *Storage) DeleteURL(alias string) error {
 	}
 	return nil
 }
-
-func (s *Storage) CheckAlias(alias string) (bool, error) {
-	const op = "storage.postgres.CheckAlias"
-	query := "SELECT 1 FROM urls WHERE alias = $1 LIMIT 1"
-
-	var exists int
-	err := s.db.QueryRow(context.Background(), query, alias).Scan(&exists)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return false, nil // alias НЕ существует
-	}
-	if err != nil {
-		return false, fmt.Errorf("%s: failed to execute query: %w", op, err)
-	}
-
-	return true, nil // alias существует
-}

@@ -2,7 +2,6 @@ package save
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
@@ -32,10 +31,6 @@ const aliasLength = 6
 //go:generate go run github.com/vektra/mockery/v2@v2.52.3 --name=URLSaver
 type URLSaver interface {
 	SaveURL(urlToSave string, alias string) (int64, error)
-	AliasChecker
-}
-type AliasChecker interface {
-	CheckAlias(alias string) (bool, error) // Метод для проверки алиаса после генерации
 }
 
 func New(log *slog.Logger, urlsaver URLSaver) http.HandlerFunc {
@@ -74,14 +69,9 @@ func New(log *slog.Logger, urlsaver URLSaver) http.HandlerFunc {
 		}
 		alias := req.Alias
 		if alias == "" {
-			generatedAlias, err := GenerateAlias(urlsaver)
-			if err != nil {
-				log.Error("failed to generate alias", sl.Err(err))
-				render.JSON(w, r, resp.Error("failed to generate unique alias, try again"))
-				return
-			}
-			alias = generatedAlias
+			alias = random.NewRandomString(aliasLength)
 		}
+
 		id, err := urlsaver.SaveURL(req.URL, alias)
 		if errors.Is(err, storage.ErrURLExist) {
 			log.Info("url already exist", slog.String("url", req.URL))
@@ -106,22 +96,4 @@ func ResponseOK(w http.ResponseWriter, r *http.Request, alias string) {
 		Response: resp.OK(),
 		Alias:    alias,
 	})
-}
-
-func GenerateAlias(aliasChecker URLSaver) (string, error) {
-	const maxAttempts = 5
-
-	for i := 0; i < maxAttempts; i++ {
-		alias := random.NewRandomString(aliasLength) // Генерируем случайный alias
-		check, err := aliasChecker.CheckAlias(alias)
-
-		if err != nil {
-			return "", fmt.Errorf("failed to check alias: %w", err)
-		} else if !check {
-			return alias, nil // Нашли уникальный alias, возвращаем его
-		}
-	}
-
-	// Если за maxAttempts не нашли уникальный alias, возвращаем ошибку
-	return "", errors.New("failed to generate unique alias after max attempts")
 }

@@ -30,7 +30,7 @@ func (h *DiscardHandler) WithGroup(_ string) slog.Handler {
 	return h
 }
 
-func (h *DiscardHandler) Enabled(context.Context, slog.Level) bool {
+func (h *DiscardHandler) Enabled(_ context.Context, _ slog.Level) bool {
 	//Всегда возвращает false, так как запись журнала игнорируется
 	return false
 }

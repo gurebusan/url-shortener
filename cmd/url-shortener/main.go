@@ -10,7 +10,7 @@ import (
 	"url-shortener/internal/lib/logger/sl"
 	"url-shortener/internal/storage/postgres"
 
-	"url-shortener/internal/http-server/hanndlers/url/save"
+	"url-shortener/internal/http-server/handlers/url/save"
 	mwLogger "url-shortener/internal/http-server/middleware/logger"
 
 	"github.com/go-chi/chi/v5"
