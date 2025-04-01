@@ -48,6 +48,6 @@ func New(log *slog.Logger, urlremover URLRemover) http.HandlerFunc {
 		}
 		log.Info("deleted url", slog.String("url", resURL))
 
-		w.WriteHeader(http.StatusOK)
+		render.JSON(w, r, resp.OK())
 	}
 }
