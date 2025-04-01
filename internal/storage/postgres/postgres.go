@@ -99,16 +99,24 @@ func (s *Storage) GetURL(alias string) (string, error) {
 	return resURL, nil
 }
 
-func (s *Storage) DeleteURL(alias string) error {
+func (s *Storage) DeleteURL(alias string) (string, error) {
 	const op = "storage.postgres.DeleteURL"
-	//Выполняем запрос
-	query := "DELETE FROM urls WHERE alias = $1"
-	result, err := s.db.Exec(context.Background(), query, alias)
+
+	var resURL string
+	selectQuery := "SELECT url FROM urls WHERE alias = $1"
+	err := s.db.QueryRow(context.Background(), selectQuery, alias).Scan(&resURL)
 	if err != nil {
-		return fmt.Errorf("%s: failed to delete url: %w", op, err)
+		if errors.Is(err, pgx.ErrNoRows) {
+			return "", fmt.Errorf("%s: %w", op, storage.ErrURLNotFound)
+		}
+		return "", fmt.Errorf("%s: failed to fetch URL: %w", op, err)
 	}
-	if result.RowsAffected() == 0 {
-		return fmt.Errorf("%s: %w", op, storage.ErrURLNotFound)
+
+	deleteQuery := "DELETE FROM urls WHERE alias = $1"
+	_, err = s.db.Exec(context.Background(), deleteQuery, alias)
+	if err != nil {
+		return "", fmt.Errorf("%s: failed to delete url: %w", op, err)
 	}
-	return nil
+
+	return resURL, nil
 }

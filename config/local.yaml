@@ -5,7 +5,7 @@ storage_connection:
   host: "localhost"
   port: 5432
   user: "gurebusan"
-  dbname: "url-shortener-database"
+  dbname: "postgres"
   sslmode: "disable"
 http_server: 
   address: "localhost:8082"
