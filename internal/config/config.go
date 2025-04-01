@@ -15,17 +15,20 @@ type Config struct {
 }
 
 type StorageConnection struct {
-	Host    string `yaml:"host"`
-	Port    int    `yaml:"port"`
-	User    string `yaml:"user"`
-	DBName  string `yaml:"dbname"`
-	SSLMode string `yaml:"sslmode"`
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	User     string `yaml:"user"`
+	Password string `yaml:"password" env:"DB_PASSWD_URLSHRTNER"`
+	DBName   string `yaml:"dbname"`
+	SSLMode  string `yaml:"sslmode"`
 }
 
 type HTTPServer struct {
 	Address     string        `yaml:"address" env-default:"localhost:8080"`
 	Timeout     time.Duration `yaml:"timeout" env-default:"4s"`
 	IdleTimeout time.Duration `yaml:"idle_timeout" env-default:"60s"`
+	User        string        `yaml:"user" env-required:"true"`
+	Password    string        `yaml:"password" env-required:"true" env:"HTTP_SERVER_PASSWORD"`
 }
 
 func MustLoad() *Config {

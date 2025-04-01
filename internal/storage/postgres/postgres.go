@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
 	"time"
 	"url-shortener/internal/config"
 	"url-shortener/internal/storage"
@@ -22,14 +21,10 @@ func New(cfg config.StorageConnection) (*Storage, error) {
 	const op = "storage.postgres.New"
 
 	//Создаём конфиг пула
-	password := os.Getenv("DB_PASSWD_URLSHRTNER")
-	if password == "" {
-		return nil, fmt.Errorf("%s: DB_PASSWD_URLSHRTNER is no set", op)
-	}
 	poolConfig, err := pgxpool.ParseConfig(fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=%s",
 		cfg.User,
-		password,
+		cfg.Password,
 		cfg.Host,
 		cfg.Port,
 		cfg.DBName,
