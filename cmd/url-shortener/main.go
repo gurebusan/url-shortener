@@ -97,7 +97,7 @@ func main() {
 		return
 	}
 
-	// TODO: close storage
+	storage.Close()
 
 	log.Info("server stopped")
 }

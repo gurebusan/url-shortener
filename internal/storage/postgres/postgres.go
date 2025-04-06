@@ -115,3 +115,7 @@ func (s *Storage) DeleteURL(alias string) (string, error) {
 
 	return resURL, nil
 }
+
+func (s *Storage) Close() {
+	s.db.Close()
+}
