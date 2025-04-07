@@ -1,6 +1,6 @@
 #version: "3.8"
 services:
-  url-shortener: 
+  app 
     build: .
     ports:
       - "8082:8082"
