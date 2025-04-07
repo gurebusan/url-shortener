@@ -19,8 +19,8 @@ const (
 )
 
 var (
-	envMap, _  = godotenv.Read(".env")
-	user, pass = envMap["SERVER_ADMIN"], envMap["SERVER_PASS"]
+	envMap, _  = godotenv.Read("../.env")
+	user, pass = "admin", envMap["HTTP_SERVER_PASSWORD"]
 )
 
 func TestUrlShortener_HappyPath(t *testing.T) {

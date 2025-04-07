@@ -1,8 +1,9 @@
 env: "prod"
 storage_connection:
-  host: "0.0.0.0"
+  host: "postgres"
   port: 5432
   user: "postgres"
+  dbname: url_shortener
   sslmode: "disable"
 http_server:
   address: "0.0.0.0:8082"

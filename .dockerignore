@@ -1,0 +1,5 @@
+tests/.env
+config/local.yaml
+.git/
+storage/
+

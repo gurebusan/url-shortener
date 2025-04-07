@@ -18,7 +18,7 @@ type StorageConnection struct {
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`
 	User     string `yaml:"user"`
-	Password string `yaml:"password" env-required:"true" env:"DB_PASS"`
+	Password string `yaml:"password" env-required:"true" env:"DB_PASSWORD"`
 	DBName   string `yaml:"dbname"`
 	SSLMode  string `yaml:"sslmode"`
 }

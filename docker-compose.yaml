@@ -1,0 +1,25 @@
+#version: "3.8"
+services:
+  url-shortener: 
+    build: .
+    ports:
+      - "8082:8082"
+    env_file:
+      - .env
+    depends_on:
+      - postgres  
+    restart: unless-stopped
+
+  postgres:  
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: url_shortener
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+      
+volumes:
+  postgres_data:
